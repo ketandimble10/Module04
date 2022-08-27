@@ -1,0 +1,206 @@
+Module04 - MongoDB Queries
+
+test> use Edureka
+switched to db Edureka
+Edureka> db.createCollection("Movies")
+{ ok: 1 }
+
+1.Add 5 movies to the collection
+
+Edureka> db.Movies.insertMany([{Name:"Avatar",Rating:"7.9",Genre:"Action,Adventure",Language:"English"},
+{Name:"The Avengers",Rating:"8.1",Genre:"Action,Thriller",Language:"English"},
+{Name:"The Wolf of Wall Street",Rating:"8.2",Genre:"Biography",Language:"English"},
+{Name:"KGF",Rating:"8.4",Genre:"Action,Drama",Language:"Hindi"},
+{Name:"Black panther",Rating:"8.9",Genre:"Sci-Fi,Adventure",Language:"English"}])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId("6302260ffe1735e60672c40d"),
+    '1': ObjectId("6302260ffe1735e60672c40e"),
+    '2': ObjectId("6302260ffe1735e60672c40f"),
+    '3': ObjectId("6302260ffe1735e60672c410"),
+    '4': ObjectId("6302260ffe1735e60672c411")
+  }
+}
+
+2.Query that returns all the movies
+
+Edureka> db.Movies.find()
+[
+  {
+    _id: ObjectId("6302260ffe1735e60672c40d"),
+    Name: 'Avatar',
+    Rating: '7.9',
+    Genre: 'Action,Adventure',
+    Language: 'English'
+  },
+  {
+    _id: ObjectId("6302260ffe1735e60672c40e"),
+    Name: 'The Avengers',
+    Rating: '8.1',
+    Genre: 'Action,Thriller',
+    Language: 'English'
+  },
+  {
+    _id: ObjectId("6302260ffe1735e60672c40f"),
+    Name: 'The Wolf of Wall Street',
+    Rating: '8.2',
+    Genre: 'Biography',
+    Language: 'English'
+  },
+  {
+    _id: ObjectId("6302260ffe1735e60672c410"),
+    Name: 'KGF',
+    Rating: '8.4',
+    Genre: 'Action,Drama',
+    Language: 'Hindi'
+  },
+  {
+    _id: ObjectId("6302260ffe1735e60672c411"),
+    Name: 'Black panther',
+    Rating: '8.9',
+    Genre: 'Sci-Fi,Adventure',
+    Language: 'English'
+  }
+]
+
+3.Query to find a movie name using findOne method 
+
+Edureka> db.Movies.findOne({Name:'KGF'})
+{
+  _id: ObjectId("6302260ffe1735e60672c410"),
+  Name: 'KGF',
+  Rating: '8.4',
+  Genre: 'Action,Drama',
+  Language: 'Hindi'
+}
+
+4.Query that returns the three highest rated movies
+
+Edureka> db.Movies.find().sort({Rating:"-1"}).limit(3)
+[
+  {
+    _id: ObjectId("6302260ffe1735e60672c411"),
+    Name: 'Black panther',
+    Rating: '8.9',
+    Genre: 'Sci-Fi,Adventure',
+    Language: 'English'
+  },
+  {
+    _id: ObjectId("6302260ffe1735e60672c410"),
+    Name: 'KGF',
+    Rating: '8.4',
+    Genre: 'Action,Drama',
+    Language: 'Hindi'
+  },
+  {
+    _id: ObjectId("6302260ffe1735e60672c40f"),
+    Name: 'The Wolf of Wall Street',
+    Rating: '8.2',
+    Genre: 'Biography',
+    Language: 'English'
+  }
+]
+
+5.Add a key called achievements in any two documents
+
+Edureka> db.Movies.update({Name:"KGF"},{$set:{Achievements:"Super hit"}})
+DeprecationWarning: Collection.update() is deprecated. Use updateOne, updateMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+Edureka> db.Movies.find({Name:"KGF"})
+[
+  {
+    _id: ObjectId("6302260ffe1735e60672c410"),
+    Name: 'KGF',
+    Rating: '8.4',
+    Genre: 'Action,Drama',
+    Language: 'Hindi',
+    Achievements: 'Super hit'
+  }
+]
+
+Edureka> db.Movies.replaceOne({_id: ObjectId("6302260ffe1735e60672c40e"),
+Name:"The Avengers",Rating:"8.1",
+Genre:"Action,Thriller",Language:"English",Achievements:"Super Duper Hit"})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+
+
+Edureka> db.Movies.replaceOne({Name:"The Avengers"},{_id: ObjectId("6302260ffe1735e60672c40e"),
+Name:"The Avengers",Rating:"8.1",Genre:"Action,Thriller",
+Language:"English",Achievements:"Super Duper Hit"})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+Edureka> db.Movies.find({Name:"The Avengers"})
+[
+  {
+    _id: ObjectId("6302260ffe1735e60672c40e"),
+    Name: 'The Avengers',
+    Rating: '8.1',
+    Genre: 'Action,Thriller',
+    Language: 'English',
+    Achievements: 'Super Duper Hit'
+  }
+]
+
+6.Write a query that returns all the movies that have both the ‘Super hit’ and the ‘Super Duper hit’’
+achievements
+
+Edureka> db.Movies.find({Achievements:{$in:["Super hit","Super Duper Hit"]}})
+[
+  {
+    _id: ObjectId("6302260ffe1735e60672c40e"),
+    Name: 'The Avengers',
+    Rating: '8.1',
+    Genre: 'Action,Thriller',
+    Language: 'English',
+    Achievements: 'Super Duper Hit'
+  },
+  {
+    _id: ObjectId("6302260ffe1735e60672c410"),
+    Name: 'KGF',
+    Rating: '8.4',
+    Genre: 'Action,Drama',
+    Language: 'Hindi',
+    Achievements: 'Super hit'
+  }
+]
+
+7.Write a query that returns only those movies that have achievements
+
+Edureka> db.Movies.find({Achievements:{$exists: true}})
+[
+  {
+    _id: ObjectId("6302260ffe1735e60672c40e"),
+    Name: 'The Avengers',
+    Rating: '8.1',
+    Genre: 'Action,Thriller',
+    Language: 'English',
+    Achievements: 'Super Duper Hit'
+  },
+  {
+    _id: ObjectId("6302260ffe1735e60672c410"),
+    Name: 'KGF',
+    Rating: '8.4',
+    Genre: 'Action,Drama',
+    Language: 'Hindi',
+    Achievements: 'Super hit'
+  }
+]
+Edureka>

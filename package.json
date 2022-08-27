@@ -1,0 +1,19 @@
+{
+  "name": "module04",
+  "version": "1.0.0",
+  "description": "Edureka Nodejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ketandimble10/Module04.git"
+  },
+  "author": "Ketan Dimble",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ketandimble10/Module04/issues"
+  },
+  "homepage": "https://github.com/ketandimble10/Module04#readme"
+}
